@@ -10,15 +10,20 @@ def output_accuracy(name, predictions):
 	print name,"- Accuracy Score", \
 	accuracy_score(iris.target, predictions)
 
+
+#GAUSSIAN 
 from sklearn.naive_bayes import GaussianNB
 
 clf = GaussianNB()
 
-gaussian_pred = clf.fit(iris.data, iris.target).predict(iris.data)
+clf.fit(iris.data, iris.target)
+
+gaussian_pred = predict(iris.data)
 
 output_accuracy("GaussianNB", gaussian_pred)
 
 
+#MULTINOMIAL
 from sklearn.naive_bayes import MultinomialNB
 
 clf = MultinomialNB()
