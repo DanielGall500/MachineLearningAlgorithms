@@ -1,38 +1,41 @@
-from sklearn import datasets
-from sklearn.metrics import accuracy_score
+from sklearn.datasets import load_iris
+import numpy as np
 
-iris = datasets.load_iris()
+iris = load_iris()
 
-def output_accuracy(name, predictions):
-	print name, "- Mislabeled Points: %d out of %d" % \
-	(sum(iris.target != predictions), len(iris.data))
+features = iris.data
+target = iris.target
 
-	print name,"- Accuracy Score", \
-	accuracy_score(iris.target, predictions)
+from sklearn.cross_validation import train_test_split
+
+x_train, x_test, y_train, y_test = train_test_split(features, target, test_size=0.3)
+
+import theano
+import theano.tensor as T
+
+print 'T', features
+print 'S', target
+
+frequency_table = np.array([])
+
+for col in features.T:
+	frequencies = {}
+	for val in col:
+		val = round(val, 3)
+		if val in frequencies:
+			frequencies[val] = frequencies[val] + 1
+		else:
+			frequencies[val] = 1
+	frequency_table = np.append(frequency_table, frequencies)
+
+print frequency_table
 
 
-#GAUSSIAN 
-from sklearn.naive_bayes import GaussianNB
-
-clf = GaussianNB()
-
-clf.fit(iris.data, iris.target)
-
-gaussian_pred = predict(iris.data)
-
-output_accuracy("GaussianNB", gaussian_pred)
 
 
-#MULTINOMIAL
-from sklearn.naive_bayes import MultinomialNB
 
-clf = MultinomialNB()
 
-clf.fit(iris.data, iris.target)
 
-multinomial_pred = clf.predict(iris.data)
-
-output_accuracy("MultinomialNB", multinomial_pred)
 
 
 
