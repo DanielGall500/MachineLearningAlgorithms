@@ -1,5 +1,6 @@
 from sklearn.datasets import load_iris
 import numpy as np
+import pandas as pd
 
 iris = load_iris()
 
@@ -27,16 +28,31 @@ for col in features.T:
 	frequency_table = np.append(frequency_table, frequencies)
 	total_freq.append(sum(frequencies.itervalues()))
 
+print frequency_table
+
 likelihood_table = np.array([])
 
+targs = iris.target
+
 for d in frequency_table:
+	idx = 0 #find better iteration method
 	likelihood_storage = {}
 	for key, value in d.iteritems():
 		prob = float(value) / float(total_freq[0])
-		likelihood_storage[key] = round(prob, 2)
+		likelihood_storage[key] = [round(prob, 2), targs[idx]]
+		idx += 1
+		print targs[idx], idx
 	likelihood_table = np.append(likelihood_table, likelihood_storage)
 
-print likelihood_table
+from collections import OrderedDict
+
+likelihood_table = [OrderedDict(sorted(d.items())) for d in likelihood_table]
+
+likelihood_dataframe = pd.DataFrame()
+
+
+
+
 
 
 
