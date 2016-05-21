@@ -16,8 +16,6 @@ def calc_distances(inputs, neighbours, k):
 
 	return distances[ : k-1]
 
-
-
 input_var = T.vector('input')
 nb = T.matrix('neighbours')
 
@@ -69,6 +67,21 @@ neighbours = np.array([
 
 
 
+=======
+input_var = T.vector('input')
+nb = T.matrix('neighbours')
+
+k = T.iscalar('k_value')
+seq_count = T.iscalar('sequnces_range')
+
+seq = T.arange(seq_count)
+
+output = T.as_tensor_variable(np.asarray(0, seq.dtype))
+
+scan_result, scan_updates = theano.scan(fn=calc_distance, outputs_info=output, sequences=seq)
+
+knn = theano.function(inputs=[input_var, nb, k], outputs_info=scan_result)
+>>>>>>> origin/master
 
 
 
