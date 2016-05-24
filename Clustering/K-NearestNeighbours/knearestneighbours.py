@@ -1,9 +1,9 @@
 from theano import function
-import numpy as np
+from collections import Counter
 import theano.tensor as T
+import numpy as np
 import theano
 import operator
-
 
 rand_gen = np.random
 
@@ -38,16 +38,31 @@ def k_nearest_neighbours(inputs, nb, k, steps): #TRYING TO FIGURE THIS OUT AND H
 
 	dict_out = dict(enumerate(distance_output))
 
-	k_nearest = (sorted(dict_out.items(), key=operator.itemgetter(1)))[:k+1] #Gets the k smallest (closest) values
+	knn_index = (sorted(dict_out.items(), key=operator.itemgetter(1)))[:k+1] #Gets the k smallest (closest) value indexes
 
-	print k_nearest
+	k_nearest_matrix = np.array([neighbours[x[0]] for x in knn_index])
+
+	#print k_nearest_matrix[:,class_index]
+
+	return k_nearest_matrix
+
+def predict_knn(nrst_nbrs, class_index):
+
+	predictions = []
+
+	classes = nrst_nbrs[:, class_index]
+
+	modes = Counter(classes)
+
+	predictions.append(modes.items()[0][0])
+
+	return predictions
 
 
 #Create samples for testing
 
 input_features = np.array([[5.1, 3.8, 1.5, 0.3]])
 
-k = 5
 
 neighbours = np.array([ # 0 = Iris-setosa, 1 = Iris-versicolor, 2 = Iris-virginica
 [5.1,3.5,1.4,0.3,0],[5.7,3.8,1.7,0.3,0],[5.1,3.5,1.4,0.2,0],
@@ -61,9 +76,15 @@ neighbours = np.array([ # 0 = Iris-setosa, 1 = Iris-versicolor, 2 = Iris-virgini
 [6.7,3.3,5.7,2.1,2],[7.2,3.2,6.0,1.8,2],[6.2,2.8,4.8,1.8,2],
 [6.1,3.0,4.9,1.8,2],[6.4,2.8,5.6,2.1,2],[7.2,3.0,5.8,1.6,2]])
 
+k = 5
 steps = len(neighbours)
+target_index = 4 #the index that the class is at in neighbours
 
-print k_nearest_neighbours(input_features, neighbours, k, steps)
+knn = k_nearest_neighbours(input_features, neighbours, k, steps)
+
+predictions = predict_knn(knn, target_index)
+
+print predictions
 
 
 
