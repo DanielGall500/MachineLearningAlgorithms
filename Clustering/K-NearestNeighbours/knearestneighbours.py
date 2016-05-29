@@ -7,7 +7,7 @@ import operator
 
 rand_gen = np.random
 
-def calc_distances(step, inputs, neighbours, k):
+def calc_distances(step, inputs, neighbours, k): #CURRENTLY DEPENDS ON NUMBERS
 
 	nb_feat = neighbours[step][:4] #everything but last feature
 	target = neighbours[-1] #last feature
@@ -42,8 +42,6 @@ def k_nearest_neighbours(inputs, nb, k, steps):
 
 	k_nearest_matrix = np.array([neighbours[x[0]] for x in knn_index])
 
-	#print k_nearest_matrix[:,class_index]
-
 	return k_nearest_matrix
 
 def predict_knn(nrst_nbrs, class_index):
@@ -61,6 +59,19 @@ def predict_knn(nrst_nbrs, class_index):
 	predictions.append(prediction[0])
 
 	return predictions
+
+def knn_accuracy(predictions, true_values):
+
+	if len(predictions) != len(true_values):
+		raise ValueError
+
+	equality = 0.0
+
+	equality = [equality+1 for x in range(len(true_values)) if predictions[x] == true_values[x]]
+
+	accuracy = sum(equality) / len(true_values)
+
+	return accuracy
 
 
 #Create samples for testing
@@ -89,6 +100,7 @@ knn = k_nearest_neighbours(input_features, neighbours, k, steps)
 predictions = predict_knn(knn, target_index)
 
 print predictions
+
 
 
 
