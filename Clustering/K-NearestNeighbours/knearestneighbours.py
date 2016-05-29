@@ -32,7 +32,7 @@ scan_result, scan_updates = theano.scan(fn=calc_distances, outputs_info=None, se
 distances = theano.function(inputs=[input_var, nb, k, step_count], outputs=scan_result)
 
 
-def k_nearest_neighbours(inputs, nb, k, steps): #TRYING TO FIGURE THIS OUT AND HOW TO DO IT (ONLY NEED TO GET K WORKING NOW)
+def k_nearest_neighbours(inputs, nb, k, steps):
 
 	distance_output = distances(input=inputs, neighbours=nb, k_value=k, steps=steps)
 
@@ -54,14 +54,18 @@ def predict_knn(nrst_nbrs, class_index):
 
 	modes = Counter(classes)
 
-	predictions.append(modes.items()[0][0])
+	print modes
+
+	prediction = max(modes.items())
+
+	predictions.append(prediction[0])
 
 	return predictions
 
 
 #Create samples for testing
 
-input_features = np.array([[5.1, 3.8, 1.5, 0.3]])
+input_features = np.array([[6.3,2.7,4.9,1.8]])
 
 
 neighbours = np.array([ # 0 = Iris-setosa, 1 = Iris-versicolor, 2 = Iris-virginica
